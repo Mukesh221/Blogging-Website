@@ -1,0 +1,40 @@
+{% extends "groups/group_base.html" %}
+{% block pregroup %}
+
+<h1>{{group.name}}</h1> 
+<!--   with the class based views, a context dictionary is passed that holds everything that the model has -->
+
+<!-- The most important thing about class based views:::::
+    This "group" dictionary comes from the Group class of models.py file. The name of the dictionary is "g"roup(lowercase) because
+    the name of the class is "G"roup(uppercase). In short, "group" is the lowercase singluar version of the actual model-->
+<h2>Member Count: {{group.members.count}}</h2>
+<div class="content">
+    {% if user in group.members.all %}
+        <a href="{% url 'groups:leave' slug=group.slug %}"
+        class='btn btn-lg btn-fill btn-warning'><span
+        class='glyphicon glyphicon-remove-circle'></span>Leave</a>
+    {% else %}
+    <a href="{% url 'groups:leave' slug=group.slug %}"
+       class='btn btn-lg btn-fill btn-warning'><span
+       class='glyphicon glyphicon-remove-circle'></span>Leave</a>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block group_content %}
+<div class="col-md-8">
+    {% if group.posts.count == 0 %} <!-- if the group doesn't have any post -->
+        <h2>No posts in this group yet!</h2>
+    {% else %}
+        {% for posts in group.posts.all %}
+          {% include "posts/_post.html" %}
+          <!-- include is a way to say extend but here we are inserting an html file in the middle of an html file. Instead of extending and using blocks, use include statement to inject
+               an html file. Since it is very tough with the posts, a lot of html calls, lot of template calls, lot of template tags.. They cannot be written here, so write all of them 
+               in _post.html file and inject here -->
+        {% endfor %}
+    {% endif %}
+{% endblock %}
+
+
+</div>
+
